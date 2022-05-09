@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel')
+const jwt = require('jsonwebtoken')
 
 const isValid = (value) => {
     if (typeof value === 'undefined' || value === null) return false
@@ -97,4 +98,47 @@ const registerUser = async (req, res) => {
     }
 }
 
-module.exports = { registerUser }
+
+const loginUser = async (req, res) => {
+    try {
+        const requestBody = req.body
+        if (!isValidRequestBody(requestBody)) {
+            res.status(400).send({ status: false, message: 'Invalid request parameters. Please provide login details' })
+            return
+        }
+
+        // Extract params
+        const { email, password } = requestBody
+
+        // Validate starts
+        if (!isValid(email)) {
+            res.status(400).send({ status: false, message: 'Email is required' })
+            return
+        }
+
+        if (!isValid(password)) {
+            res.status(400).send({ status: false, message: 'Password is required' })
+            return
+        }
+        // Validation ends
+
+        const user = await userModel.findOne({ email, password })
+
+        if (!user) {
+            res.status(401).send({ status: false, message: 'Invalid login credentials' });
+            return
+        }
+
+        const token = await jwt.sign({
+            userId: user._id,
+            iat: Math.floor(Date.now() / 1000),
+            exp: Math.floor(Date.now() / 1000) * 10 * 60 * 60
+        }, 'Project-3')
+
+        res.status(200).send({ status: true, message: 'Success', data: { token } });
+    } catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
+    }
+}
+
+module.exports = { registerUser, loginUser }

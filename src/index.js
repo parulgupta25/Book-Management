@@ -5,11 +5,11 @@ const bodyparser=require('body-parser')
 const router = require('./routes/route')
  app.use(bodyparser.json())
 
-//  const mongoose=require('mongoose')
-//  mongoose.connect("",
-//     {useNewUrlParser:true})
-//     .then(()=>console.log("mongoDB is Connected!!"))
-//     .catch(err=>console.log(err))
+ const mongoose=require('mongoose')
+ mongoose.connect("mongodb+srv://Pratice:MVLNdVEz62Td6t7j@cluster0.q9vy5.mongodb.net/group8Database",
+    {useNewUrlParser:true})
+    .then(()=>console.log("mongoDB is Connected!!"))
+    .catch(err=>console.log(err))
 
     app.use('/',router)
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+
 const bookSchema = new mongoose.Schema({
 
     title: {
@@ -30,15 +31,18 @@ const bookSchema = new mongoose.Schema({
         required: 'SubCategory is Required'
     },
     reviews: {
-        type: number,
+        type: Number,
         default: 0,
     },
     isDeleted: {
-        type: boolean,
+        type: Boolean,
         default: false
     },
     deletedAt: Date,
-    releasedAt: Date
+    releasedAt: {
+        type:Date,
+        required:'releasedAt is Required'
+    }
 
 }, { timestamps: true })
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+
 const bookSchema = new mongoose.Schema({
 
     title: {
@@ -38,7 +39,10 @@ const bookSchema = new mongoose.Schema({
         default: false
     },
     deletedAt: Date,
-    releasedAt: Date
+    releasedAt: {
+        type:Date,
+        required:'releasedAt is Required'
+    }
 
 }, { timestamps: true })
 

@@ -8,12 +8,9 @@ const mongoose = require('mongoose')
 /************************************************Create Book API**************************************************/
 
 const createBook = async function (req, res) {
-    try {
+        try {
 
         let data = req.body
-
-        // if (userId != req.userId) {
-        // return res.status(403).send({status: false, message: "Unauthorized access ! User's credentials doesn't match."})}
 
         let { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data
 
@@ -27,15 +24,21 @@ const createBook = async function (req, res) {
 
         if (!ISBN) return res.status(400).send({ status: false, message: "ISBN must be present" })
 
+        if(!/^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/.test(ISBN)){
+        return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' })}
+
         if (!category) return res.status(400).send({ status: false, message: "category must be present" })
 
         if (!subcategory) return res.status(400).send({ status: false, message: "subcategory must be present" })
 
+        if (!Array.isArray(subcategory)) return res.status(400).send({ status: false, message: "subcategory should be an array" })
+
         if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt must be present" })
 
-        if (data.isDeleted == true) data.deletedAt = Date.now()
+        if(!/((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)){
+        return res.status(400).send({ status: false, message: 'Please provide a valid Date' })} 
 
-        if (!Array.isArray(subcategory)) return res.status(400).send({ status: false, message: "subcategory should be an array" })
+        if (data.isDeleted == true) data.deletedAt = Date.now()
 
         if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ status: false, message: `Invalid userId.` })
 
@@ -55,7 +58,7 @@ const createBook = async function (req, res) {
 
         res.status(201).send({ status: true, message: "Book created successfully", data: newBook })
 
-    } catch (err) {
+     } catch (err) {
         return res.status(500).send({ status: false, error: err.message })
     }
 }
@@ -67,14 +70,16 @@ const getBook = async function (req, res) {
 
         let data = req.query
 
-        if (!Object.keys(data).length) return res.status(400).send("Please enter the Details")
+        // if (!Object.keys(data).length) return res.status(400).send("Please enter the Details")
 
-        if (!mongoose.isValidObjectId(data.userId)) return res.status(400).send({ status: false, message: `Invalid userId.` })
+        // if (!mongoose.isValidObjectId(data.userId)) return res.status(400).send({ status: false, message: `Invalid userId.` })
+
+        if(data.userId){
 
         let checkUser = await userModel.findById(data.userId)
 
         if (!checkUser) return res.status(400).send({ status: false, message: "UserId Not Found" })
-
+        }
         data.isDeleted = false
 
         const bookList = await bookModel.find(data)
@@ -134,7 +139,13 @@ const updateBook = async function (req, res) {
 
         if (!ISBN) return res.status(400).send({ status: false, message: "ISBN is missing ! Please provide the ISBN details to update." })
 
+        if(!/^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/.test(ISBN)){
+        return res.status(400).send({ status: false, message: 'Please provide a valid ISBN' })}
+        
         if (!releasedAt) return res.status(400).send({ status: false, message: "Released date is missing ! Please provide the released date details to update." })
+
+        if(!/((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)){
+            return res.status(400).send({ status: false, message: 'Please provide a valid Date' })} 
 
         if (!mongoose.isValidObjectId(book_id)) return res.status(400).send({ status: false, message: "Invalid userId." })
 

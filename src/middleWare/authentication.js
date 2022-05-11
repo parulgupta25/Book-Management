@@ -1,4 +1,8 @@
+const bookModel=require("../models/bookModel")
 const jwt=require("jsonwebtoken")
+
+
+/************************************************Authentication MiddleWare**************************************************/
 
 const authentication=async function(req,res,next){
 
@@ -8,11 +12,10 @@ const authentication=async function(req,res,next){
 
     if (!token)return res.status(400).send({ status: false, msg: "token not found" })
 
-    let decodedToken = jwt.verify(token,"NONOINWW2Q9NAQO2OQ0#jn$@ono@")//verify token
+    let decodedToken = jwt.verify(token,"NONOINWW2Q9NAQO2OQ0#jn$@ono@")
     
     if (!decodedToken) return res.status(401).send({ status: false, msg: "invalid token" })
-    
-    //let userId=decodeToken.userId
+
      next()
 
     }catch(err){
@@ -22,5 +25,43 @@ const authentication=async function(req,res,next){
 }
 
 
+/************************************************Authorization MiddleWare**************************************************/
 
-module.exports={authentication}
+const authorization=async function(req,res,next){
+
+    try{
+
+    let token = req.headers["x-api-key"]
+
+    if (!token)return res.status(400).send({ status: false, msg: "token not found" })
+
+    let decodedToken = jwt.verify(token,"NONOINWW2Q9NAQO2OQ0#jn$@ono@")
+    
+    if (!decodedToken) return res.status(401).send({ status: false, msg: "invalid token" })
+    
+    let usersId=decodedToken.userId
+    let bodyData=req.body.userId
+    let booksId = req.params.bookId
+
+    if(bodyData){
+        if (usersId != bodyData) {
+        return res.status(403).send
+        ({status: false, message: "Unauthorized access ! User's credentials doesn't match."})}
+    }
+
+    if(booksId){
+      let checkBook=await bookModel.findOne({_id:booksId,userId:usersId})
+      if(!checkBook){ return res.status(403).send
+        ({status: false, message: "Unauthorized access ! User's credentials doesn't match."})}
+    }
+
+    next()
+
+    }catch(err){
+     res.status(500).send({status:false,Error:err.message})
+     }
+}
+
+
+
+module.exports={authentication,authorization}

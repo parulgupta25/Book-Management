@@ -25,7 +25,7 @@ const createUser = async function (req, res) {
 
         if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(data.phone)) {
             return res.status(400).send
-                ({ status: false, msg: `${phone} is not a valid mobile number, Please provide a valid mobile number` })
+                ({ status: false, msg: `${data.phone} is not a valid mobile number, Please provide a valid mobile number` })
         }
 
         const checkPhone = await userModel.findOne({ phone: data.phone });

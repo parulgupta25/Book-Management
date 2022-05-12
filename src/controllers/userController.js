@@ -23,7 +23,7 @@ const createUser = async function (req, res) {
 
         if (!data.phone) return res.status(400).send({ status: false, message: 'Phone is required' })
 
-        if (!/^(\+\d{1,3}[- ]?)?\d{10}$/.test(data.phone)) {
+        if (!(/^(\+\d{1,3}[- ]?)?\d{10}$/).test(data.phone)) {
             return res.status(400).send
                 ({ status: false, msg: `${data.phone} is not a valid mobile number, Please provide a valid mobile number` })
         }
@@ -52,9 +52,9 @@ const createUser = async function (req, res) {
 
         res.status(201).send({ status: true, message: 'User created successfully!!!', data: newUser });
 
-    } catch (err) {
+     } catch (err) {
 
-        res.status(500).send({ status: false, message: err.message })
+      res.status(500).send({ status: false, message: err.message })
     }
 }
 

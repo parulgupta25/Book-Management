@@ -3,10 +3,11 @@ const bookModel=require("../models/bookModel")
 const mongoose=require('mongoose')
 
 
-/**************************************************Add Review API****************************************************/
+/********************************************************Add Review API********************************************************/
 
 const addReview=async function(req,res){
 try{
+
     let book_id=req.params.bookId
     let data=req.body
 
@@ -34,8 +35,6 @@ try{
     if (!mongoose.isValidObjectId(book_id)) {
         return res.status(400).send({ status: false, message: "Invalid userId." })
     }
-
-    console.log(book_id)
     
     let checkBook=await bookModel.findById(book_id)
 
@@ -63,10 +62,12 @@ catch(err){
 }
 
 
-/**************************************************Update Review API*************************************************/
+/******************************************************Update Review API********************************************************/
+
 
 const updateReview = async function (req, res){
 try{
+
     const book_id = req.params.bookId;
     const review_Id = req.params.reviewId
     const data = req.body
@@ -127,7 +128,7 @@ try{
 }
 
 
-/**************************************************Delete Review API*************************************************/
+/*************************************************************Delete Review API*************************************************/
 
 const deleteReview = async function (req, res){
     try{

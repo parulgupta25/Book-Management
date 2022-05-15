@@ -100,7 +100,7 @@ try{
 
     
     let checkBook=await bookModel.findById(book_id)
-    let checkReview=await bookModel.findById(review_Id)
+    let checkReview=await reviewModel.findById(review_Id)
 
     if(!checkBook){
         return res.status(400).send({ status: false, message: "BookId Not Found" })

@@ -1,9 +1,15 @@
 const bookModel = require('../models/bookModel')
 const userModel = require('../models/userModel')
 const reviewModel = require('../models/reviewModel')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const { is } = require('express/lib/request');
 
 
+const isValid = function(value) {
+    if (typeof value === 'undefined' || value === null) return false //it checks whether the value is null or undefined.
+    if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
+    return true;
+};
 
 /************************************************Create Book API**************************************************/
 
@@ -16,35 +22,29 @@ const createBook = async function (req, res) {
 
         if (!Object.keys(data).length) return res.status(400).send("Please enter the Book Details")
 
-        if (!title) return res.status(400).send({ status: false, message: "Title must be present" })
+        if (!isValid(title)) return res.status(400).send({ status: false, message: "Title must be present" })
 
-        if (!excerpt) return res.status(400).send({ status: false, message: "excerpt must be present" })
+        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "excerpt must be present" })
 
-        if (!userId) return res.status(400).send({ status: false, message: "userId must be present" })
+        if (!isValid(userId)) return res.status(400).send({ status: false, message: "userId must be present" })
 
-        if (!ISBN) return res.status(400).send({ status: false, message: "ISBN must be present" })
+        if (!isValid(ISBN)) return res.status(400).send({ status: false, message: "ISBN must be present" })
 
         if(!/^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/.test(ISBN)){
         return res.status(400).send({ status: false, message: 'Please provide a valid ISBN(ISBN should be 13 digit)' })}
 
-        if (!category) return res.status(400).send({ status: false, message: "category must be present" })
+        if (!isValid(category)) return res.status(400).send({ status: false, message: "category must be present" })
 
-        if (!subcategory) return res.status(400).send({ status: false, message: "subcategory must be present" })
+        if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "subcategory must be present" })
 
         if (!Array.isArray(subcategory)) return res.status(400).send({ status: false, message: "subcategory should be an array" })
 
-        if (!releasedAt) return res.status(400).send({ status: false, message: "releasedAt must be present" })
+        if (!isValid(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt must be present" })
 
         if(!/((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)){
         return res.status(400).send({ status: false, message: 'Please provide a valid Date(YYYY-MM-DD)' })} 
 
         if (data.isDeleted == true) data.deletedAt = Date.now()
-
-        if (!mongoose.isValidObjectId(userId)) return res.status(400).send({ status: false, message: `Invalid userId.` })
-
-        let checkUser = await userModel.findById(userId)
-
-        if (!checkUser) return res.status(400).send({ status: false, message: "UserId Not Found" })
 
         let checkTitile = await bookModel.findOne({ title: title })
 

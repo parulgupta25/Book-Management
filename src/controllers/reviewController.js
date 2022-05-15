@@ -151,7 +151,7 @@ const deleteReview = async function (req, res){
     if(!checkBook){
         return res.status(400).send({ status: false, message: "BookId Not Found" })
     }
-    let checkReview=await bookModel.findById(review_Id)
+    let checkReview=await reviewModel.findById(review_Id)
 
     if(!checkReview){
         return res.status(400).send({ status: false, message: "reviewId Not Found" })
@@ -163,7 +163,7 @@ const deleteReview = async function (req, res){
     }
 
     const deleteReviewDetails = await reviewModel.findOneAndUpdate(
-        { _id: reviewParams }, 
+        { _id: review_Id }, 
         { isDeleted: true, deletedAt: new Date() }, 
         { new: true })
 

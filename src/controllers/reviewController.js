@@ -3,6 +3,12 @@ const bookModel=require("../models/bookModel")
 const mongoose=require('mongoose')
 
 
+const isValid = function(value) {
+    if (typeof value === 'undefined' || value === null) return false //it checks whether the value is null or undefined.
+    if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
+    return true;
+};
+
 /********************************************************Add Review API********************************************************/
 
 const addReview=async function(req,res){
@@ -16,7 +22,7 @@ try{
         return res.status(400).send("Please enter the review Details")
    }
 
-    if(!data.reviewedBy){
+    if(!isValid(data.reviewedBy)){
         return res.status(400).send({ status: false, message: "Reviewer name must be present" })
     }
 
@@ -24,7 +30,7 @@ try{
         return res.status(400).send({ status: false, msg: "Reviewer can't be a number" })
     }
 
-    if(!data.rating){
+    if(!isValid(data.rating)){
         return res.status(400).send({ status: false, message: "Rating must be present" })
     }
 

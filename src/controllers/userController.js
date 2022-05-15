@@ -2,6 +2,11 @@ const userModel = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
 
+const isValid = function(value) {
+    if (typeof value === 'undefined' || value === null) return false //it checks whether the value is null or undefined.
+    if (typeof value === 'string' && value.trim().length === 0) return false //it checks whether the string contain only space or not 
+    return true;
+};
 
 /**************************************************Create User API**************************************************/
 const createUser = async function (req, res) {
@@ -11,17 +16,17 @@ const createUser = async function (req, res) {
 
         if (!Object.keys(data).length) return res.status(400).send({ status: false, message: 'please enter the user details' })
 
-        if (!data.title) return res.status(400).send({ status: false, message: 'Title is required' })
+        if (!isValid(data.title)) return res.status(400).send({ status: false, message: 'Title is required' })
 
         if (["Mr", "Mrs", "Miss"].indexOf(data.title) == -1) {
             return res.status(400).send({ status: false, data: "Enter a valid title Mr or Mrs or Miss ", });
         }
 
-        if (!data.name) return res.status(400).send({ status: false, message: 'Name is required' })
+        if (!isValid(data.name)) return res.status(400).send({ status: false, message: 'Name is required' })
 
         if (!data.name.match(/^[a-zA-Z. ]{2,30}$/)) return res.status(400).send({ status: false, msg: "Please Enter A valid Intern Name" })
 
-        if (!data.phone) return res.status(400).send({ status: false, message: 'Phone is required' })
+        if (!isValid(data.phone)) return res.status(400).send({ status: false, message: 'Phone is required' })
 
         if (!(/^(\+\d{1,3}[- ]?)?\d{10}$/).test(data.phone)) {
             return res.status(400).send
@@ -32,7 +37,7 @@ const createUser = async function (req, res) {
 
         if (checkPhone) return res.status(400).send({ status: false, message: `${data.phone} phone is already registered` })
 
-        if (!data.email) return res.status(400).send({ status: false, message: 'Email is required' })
+        if (!isValid(data.email)) return res.status(400).send({ status: false, message: 'Email is required' })
 
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
             return res.status(400).send({ status: false, message: 'Email should be valid email address' })
@@ -42,7 +47,7 @@ const createUser = async function (req, res) {
 
         if (checkEmail) return res.status(400).send({ status: false, message: `${data.email} email address is already registered` })
 
-        if (!data.password) return res.status(400).send({ status: false, message: 'Password is required' })
+        if (!isValid(data.password)) return res.status(400).send({ status: false, message: 'Password is required' })
 
         if (!(data.password.length >= 8) || !(data.password.length <= 15)) {
             return res.status(400).send({ status: false, message: "Password should have length in range 8 to 15" })
@@ -68,9 +73,9 @@ const loginUser = async function (req, res) {
 
         if (!Object.keys(data).length) return res.status(400).send({ status: false, message: "Please provide login details" })
 
-        if (!data.email) return res.status(400).send({ status: false, message: 'Email is required' })
+        if (!isValid(data.email)) return res.status(400).send({ status: false, message: 'Email is required' })
 
-        if (!data.password) return res.status(400).send({ status: false, message: 'Password is required' })
+        if (!isValid(data.password)) return res.status(400).send({ status: false, message: 'Password is required' })
 
         if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(data.email)) {
             return res.status(400).send({ status: false, message: 'Email should be valid email address' })

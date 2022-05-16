@@ -163,7 +163,7 @@ const deleteReview = async function (req, res){
     }
 
     const deleteReviewDetails = await reviewModel.findOneAndUpdate(
-        { _id: reviewParams }, 
+        { _id: review_Id }, 
         { isDeleted: true, deletedAt: new Date() }, 
         { new: true })
 

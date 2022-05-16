@@ -83,9 +83,9 @@ const getBook = async function (req, res) {
         const bookList = await bookModel.find(data)
         .select({ subcategory: 0, ISBN: 0, isDeleted: 0, updatedAt: 0, createdAt: 0, __v: 0 }).sort({ title: 1 });
 
+        if (!Object.keys(bookList).length) return res.status(404).send({ status: false, message: "Book Not Found" })
+        
         res.status(200).send({ status: true, message: "Book List", data: bookList })
-
-        if (!Object.keys(bookList).length) return res.status(400).send({ status: false, message: "Book Not Found" })
 
     } catch (err) {
         res.status(500).send({ status: false, error: err.message })
@@ -130,8 +130,13 @@ const updateBook = async function (req, res) {
         if (!Object.keys(data).length) return res.status(400).send("To Update Please enter the Book Details")
 
         if(data.title){
+            if (!isValid(data.title)) return res.status(400).send({ status: false, message: "Title Is Required" })
             const checkTitle = await bookModel.findOne({ title: data.title, isDeleted: false })
             if (checkTitle) return res.status(400).send({ status: false, message: `${data.title} is already exists.Please add a new title.` })
+        }
+        
+        if(data.excerpt){
+        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "Excerpt Is Required" })
         }
 
         if(data.ISBN){

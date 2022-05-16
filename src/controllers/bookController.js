@@ -165,7 +165,7 @@ const updateBook = async function (req, res) {
 
 const deleteBook = async function (req, res) {
     try {
-        const book_id = req.params.book
+        const book_id = req.params.bookId
 
         const deleteBookData = await bookModel.findOneAndUpdate(
             { _id: book_id,isDeleted: false },

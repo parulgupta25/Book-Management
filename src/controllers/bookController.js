@@ -14,7 +14,7 @@ const isValid = function(value) {
 /************************************************Create Book API**************************************************/
 
 const createBook = async function (req, res) {
-        try {
+         try {
 
         let data = req.body
 
@@ -22,24 +22,24 @@ const createBook = async function (req, res) {
 
         if (!Object.keys(data).length) return res.status(400).send("Please enter the Book Details")
 
-        if (!isValid(title)) return res.status(400).send({ status: false, message: "Title must be present" })
+        if (!isValid(title)) return res.status(400).send({ status: false, message: "Title Is Required" })
 
-        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "excerpt must be present" })
+        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "Excerpt Is Required" })
 
-        if (!isValid(userId)) return res.status(400).send({ status: false, message: "userId must be present" })
+        if (!isValid(userId)) return res.status(400).send({ status: false, message: "UserId is Required" })
 
-        if (!isValid(ISBN)) return res.status(400).send({ status: false, message: "ISBN must be present" })
+        if (!isValid(ISBN)) return res.status(400).send({ status: false, message: "ISBN is Required" })
 
         if(!/^\+?([1-9]{3})\)?[-. ]?([0-9]{10})$/.test(ISBN)){
         return res.status(400).send({ status: false, message: 'Please provide a valid ISBN(ISBN should be 13 digit)' })}
 
-        if (!isValid(category)) return res.status(400).send({ status: false, message: "category must be present" })
+        if (!isValid(category)) return res.status(400).send({ status: false, message: "Category is Required" })
 
-        if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "subcategory must be present" })
+        if (!isValid(subcategory)) return res.status(400).send({ status: false, message: "Subcategory is Required" })
 
-        if (!Array.isArray(subcategory)) return res.status(400).send({ status: false, message: "subcategory should be an array" })
+        if (!Array.isArray(subcategory)) return res.status(400).send({ status: false, message: "Subcategory should be an Array" })
 
-        if (!isValid(releasedAt)) return res.status(400).send({ status: false, message: "releasedAt must be present" })
+        if (!isValid(releasedAt)) return res.status(400).send({ status: false, message: "ReleasedAt must be Present" })
 
         if(!/((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)){
         return res.status(400).send({ status: false, message: 'Please provide a valid Date(YYYY-MM-DD)' })} 

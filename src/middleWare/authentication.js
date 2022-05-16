@@ -12,7 +12,7 @@ const authentication = async function (req, res, next) {
 
         let token = req.headers["x-api-key"]
 
-        if (!token) return res.status(400).send({ status: false, msg: "token not found" })
+        if (!token) return res.status(400).send({ status: false, msg: "No Token Found" })
 
         let decodedToken = jwt.verify(token, "NONOINWW2Q9NAQO2OQ0#jn$@ono@")
 
@@ -35,7 +35,7 @@ const authorization = async function (req, res, next) {
 
         let token = req.headers["x-api-key"]
 
-        if (!token) return res.status(400).send({ status: false, msg: "token not found" })
+        if (!token) return res.status(400).send({ status: false, msg: "No Token Found" })
 
         let decodedToken = jwt.verify(token, "NONOINWW2Q9NAQO2OQ0#jn$@ono@")
 
@@ -46,25 +46,25 @@ const authorization = async function (req, res, next) {
         let booksId = req.params.bookId
 
         if (bodyData) {
-            if (!mongoose.isValidObjectId(bodyData)) return res.status(400).send({ status: false, message: `Invalid userId.` })
+            if (!mongoose.isValidObjectId(bodyData)) return res.status(400).send({ status: false, message: "The userId is Invalid" })
             let checkUser = await userModel.findById(bodyData)
             if (!checkUser) return res.status(400).send({ status: false, message: "UserId Not Found" })
             if (usersId != bodyData) {
                 return res.status(403).send
-                    ({ status: false, message: "Unauthorized access ! User's credentials doesn't match." })
+                    ({ status: false, message: "UnAuthorized Access!!" })
             }
         }
 
 
 
         if (booksId) {
-            if (!mongoose.isValidObjectId(booksId)) return res.status(400).send({ status: false, message: "The Id is Invalid." })
+            if (!mongoose.isValidObjectId(booksId)) return res.status(400).send({ status: false, message: "The BookId is Invalid." })
             let checkBookData = await bookModel.findOne({ _id: booksId, isDeleted: false })
             if (!checkBookData) return res.status(400).send({ status: false, message: "BookId Not Found" })
             let checkBook = await bookModel.findOne({ _id: booksId, userId: usersId })
             if (!checkBook) {
                 return res.status(403).send
-                    ({ status: false, message: "Unauthorized access ! User's credentials doesn't match." })
+                    ({ status: false, message: "UnAuthorized Access!!" })
             }
         }
 

@@ -82,15 +82,26 @@ try{
     if(!Object.keys(data).length) return res.status(400).send({ status: false, msg: "To Update Please Enter The Review Details" })
 
     if(data.reviewedBy){
+    if(!isValid(data.reviewedBy)){
+            return res.status(400).send({ status: false, message: "Reviewer name must be present" })
+    }
     if (!data.reviewedBy.match(/^[a-zA-Z. ]+$/)) {
         return res.status(400).send({ status: false, msg: "Reviewer can't be a number" })
     }}
 
     if(data.rating){
+    if(!isValid(data.rating)){
+            return res.status(400).send({ status: false, message: "Rating must be present" })
+    }
     if (!(data.rating >= 1 && data.rating <= 5)) {
         return res.status(400).send({ status: false, message: "Rating must be in between 1 to 5." })
     }}
 
+    if(data.review){
+        if(!isValid(data.review)){
+                return res.status(400).send({ status: false, message: "Review must be present" })
+        }
+    }    
     if (!mongoose.isValidObjectId(book_id)) {
         return res.status(400).send({ status: false, message: "Invalid BookId." })
     }

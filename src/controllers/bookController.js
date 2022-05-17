@@ -136,7 +136,7 @@ const updateBook = async function (req, res) {
         }
         
         if(data.excerpt){
-        if (!isValid(excerpt)) return res.status(400).send({ status: false, message: "Excerpt Is Required" })
+        if (!isValid(data.excerpt)) return res.status(400).send({ status: false, message: "Excerpt Is Required" })
         }
 
         if(data.ISBN){
